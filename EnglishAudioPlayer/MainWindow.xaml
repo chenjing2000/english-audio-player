@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="EnglishAudioPlayer" Icon="ui/main.ico"
         Background="#F5F7FA" FontFamily="Microsoft YaHei UI" FontSize="12"
-        MinWidth="520" MinHeight="400"
+        MinWidth="520" MinHeight="420" MaxWidth="900" MaxHeight="600"
         PreviewKeyDown="Window_PreviewKeyDown" PreviewKeyUp="Window_PreviewKeyUp"
         Closing="Window_Closing">
     <Grid Margin="24">

@@ -1,6 +1,6 @@
 # EnglishAudioPlayer
 
-当前版本：**v0.1.3**
+当前版本：**v0.1.7**
 
 一个简单的 C# WPF 英语教材音频播放器。程序使用固定 RMS 能量阈值检测 MP3 中的持续低能量区间，左右方向键跳转到前一个或后一个停顿中点。
 
@@ -18,6 +18,7 @@
 EnglishAudioPlayer/
 ├── App.xaml / App.xaml.cs
 ├── MainWindow.xaml / MainWindow.xaml.cs
+├── WindowStyleHelper.cs
 ├── AudioPlayer.cs
 ├── SilenceDetector.cs
 ├── SilenceSettings.cs
@@ -48,6 +49,7 @@ tests/
 | `AudioLibrary.cs` | 扫描当前文件夹中的 MP3、自然排序并读取标签 |
 | `AudioTrack.cs` | 保存列表项数据及播放/暂停显示状态 |
 | `MainWindow.xaml/.cs` | WPF 布局、用户输入、后台分析和各模块协调 |
+| `WindowStyleHelper.cs` | 仅负责禁用系统最大化按钮，同时保留窗口手动缩放能力 |
 
 `MainWindow` 不处理 PCM、RMS 或 MP3 解码；`SilenceDetector` 不依赖播放器或 UI；`AudioPlayer` 不知道播放列表和停顿检测逻辑。
 
@@ -106,11 +108,12 @@ dotnet run --project EnglishAudioPlayer/AudioPausePlayer.csproj --no-restore
 
 ## 界面
 
-- 默认宽度：主屏宽度的 50%
-- 默认高度：可用屏幕高度的 60%
-- 最大宽度：主屏宽度的 70%
-- 最大高度：可用屏幕高度的 80%
-- 最小尺寸：`520 × 400`
+- 默认宽度：主屏宽度的 50%，计算结果取整数
+- 默认高度：可用屏幕高度的 60%，计算结果取整数
+- 不支持窗口最大化；窗口仍可通过边缘或角部手动调整大小
+- 最小尺寸：`520 × 420`
+- 最大尺寸：`900 × 600`
+- 初始尺寸按屏幕工作区约 `50% × 60%` 计算，并限制在上述最小/最大范围内；尺寸和位置计算结果取整数
 - 字体：12
 - 三个主按钮：`36 × 36`，圆角 7
 - 按钮图标：`34 × 34`，水平、垂直居中

@@ -37,12 +37,13 @@ public partial class MainWindow : Window
     {
         InitializeComponent();
         Rect workArea = SystemParameters.WorkArea;
-        Width = SystemParameters.PrimaryScreenWidth * 0.5;
-        Height = workArea.Height * 0.6;
-        MaxWidth = SystemParameters.PrimaryScreenWidth * 0.7;
-        MaxHeight = workArea.Height * 0.8;
-        Left = workArea.Left + (workArea.Width - Width) / 2;
-        Top = workArea.Top + (workArea.Height - Height) / 2;
+        double desiredWidth = Math.Round(workArea.Width * 0.5);
+        double desiredHeight = Math.Round(workArea.Height * 0.6);
+        Width = Math.Clamp(desiredWidth, MinWidth, MaxWidth);
+        Height = Math.Clamp(desiredHeight, MinHeight, MaxHeight);
+        Left = Math.Round(workArea.Left + (workArea.Width - Width) / 2);
+        Top = Math.Round(workArea.Top + (workArea.Height - Height) / 2);
+        SourceInitialized += MainWindow_SourceInitialized;
         ProgressSlider.AddHandler(Mouse.PreviewMouseDownEvent, new MouseButtonEventHandler(ProgressSlider_MouseDown), true);
         AddHandler(Mouse.PreviewMouseUpEvent, new MouseButtonEventHandler(ProgressSlider_MouseUp), true);
         TrackList.ItemsSource = tracks;
@@ -50,6 +51,11 @@ public partial class MainWindow : Window
         timer.Tick += (_, _) => RefreshProgress();
         timer.Start();
         notificationTimer.Tick += (_, _) => HideNotification();
+    }
+
+    private void MainWindow_SourceInitialized(object? sender, EventArgs e)
+    {
+        WindowStyleHelper.DisableMaximizeButton(this);
     }
 
     private async void OpenButton_Click(object sender, RoutedEventArgs e)

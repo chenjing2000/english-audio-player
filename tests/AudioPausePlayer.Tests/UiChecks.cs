@@ -36,13 +36,19 @@ internal static class UiChecks
                 {
                     window = new MainWindow();
                     Rect workArea = SystemParameters.WorkArea;
-                    Assert(Math.Abs(window.Left - (workArea.Left + (workArea.Width - window.Width) / 2)) < 0.01 && Math.Abs(window.Top - (workArea.Top + (workArea.Height - window.Height) / 2)) < 0.01, "Window starts centered in available screen");
+                    double expectedLeft = Math.Round(workArea.Left + (workArea.Width - window.Width) / 2);
+                    double expectedTop = Math.Round(workArea.Top + (workArea.Height - window.Height) / 2);
+                    Assert(Math.Abs(window.Left - expectedLeft) < 0.01 && Math.Abs(window.Top - expectedTop) < 0.01, "Window starts centered with rounded coordinates");
                     window.ShowInTaskbar = false; window.ShowActivated = false; window.Left = -20000; window.Top = -20000;
                     window.Show();
                     // The native window rounds its dimensions to whole physical pixels.
-                    Assert(Math.Abs(window.Width - SystemParameters.PrimaryScreenWidth * 0.5) < 1 && Math.Abs(window.Height - SystemParameters.WorkArea.Height * 0.6) < 1, "Default size uses screen proportions");
-                    Assert(Math.Abs(window.MaxWidth - SystemParameters.PrimaryScreenWidth * 0.7) < 0.01 && Math.Abs(window.MaxHeight - SystemParameters.WorkArea.Height * 0.8) < 0.01, "Maximum size uses screen proportions");
-                    Assert(Math.Abs(window.MinWidth - 520) < 0.01 && Math.Abs(window.MinHeight - 400) < 0.01, "Minimum window size is 520x400");
+                    double expectedWidth = Math.Clamp(Math.Round(SystemParameters.WorkArea.Width * 0.5), window.MinWidth, window.MaxWidth);
+                    double expectedHeight = Math.Clamp(Math.Round(SystemParameters.WorkArea.Height * 0.6), window.MinHeight, window.MaxHeight);
+                    Assert(Math.Abs(window.Width - expectedWidth) < 1 && Math.Abs(window.Height - expectedHeight) < 1,
+                           "Default size uses rounded screen proportions within the window limits");
+                    Assert(Math.Abs(window.MinWidth - 520) < 0.01 && Math.Abs(window.MinHeight - 420) < 0.01, "Minimum window size is 520x420");
+                    Assert(Math.Abs(window.MaxWidth - 900) < 0.01 && Math.Abs(window.MaxHeight - 600) < 0.01, "Maximum window size is 900x600");
+                    Assert(window.ResizeMode == ResizeMode.CanResize, "Window remains resizable while maximize is disabled separately");
                     var notification = (Border)window.FindName("NotificationBar");
                     var notificationText = (TextBlock)window.FindName("NotificationText");
                     Assert(notification.Visibility == Visibility.Collapsed, "Notification normally collapsed");

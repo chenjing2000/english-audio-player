@@ -6,7 +6,7 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <AssemblyName>EnglishAudioPlayer</AssemblyName>
-    <Version>0.1.3</Version>
+    <Version>0.1.7</Version>
     <ApplicationIcon>ui/main.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
