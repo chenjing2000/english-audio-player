@@ -1,0 +1,125 @@
+<Window x:Class="AudioPausePlayer.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="EnglishAudioPlayer" Icon="ui/main.ico"
+        Background="#F5F7FA" FontFamily="Microsoft YaHei UI" FontSize="12"
+        MinWidth="520" MinHeight="400"
+        PreviewKeyDown="Window_PreviewKeyDown" PreviewKeyUp="Window_PreviewKeyUp"
+        Closing="Window_Closing">
+    <Grid Margin="24">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <Grid Margin="0,0,0,20">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <Button x:Name="OpenButton" ToolTip="打开文件夹" AutomationProperties.Name="打开文件夹" VerticalAlignment="Center" Click="OpenButton_Click">
+                <Image Width="34" Height="34" HorizontalAlignment="Center" VerticalAlignment="Center" Stretch="Uniform" Source="{StaticResource OpenFolderIcon}"/>
+            </Button>
+            <Slider x:Name="ProgressSlider" Grid.Column="1" Margin="20,0,12,0" VerticalAlignment="Center" Minimum="0" Maximum="1" IsEnabled="False"
+                        Height="28" IsMoveToPointEnabled="True"
+                        ValueChanged="ProgressSlider_ValueChanged"
+                        LostMouseCapture="ProgressSlider_LostMouseCapture"/>
+            <TextBlock x:Name="TimeText" Grid.Column="2" Margin="0,0,16,0" Text="00:00 / 00:00" VerticalAlignment="Center"
+                           Foreground="#566477"/>
+            <Button x:Name="PlayButton" Grid.Column="3" ToolTip="播放" AutomationProperties.Name="播放"
+                    VerticalAlignment="Center" Margin="0,0,10,0" IsEnabled="False" Click="PlayButton_Click">
+                <Image x:Name="PlayIconImage" Width="34" Height="34" HorizontalAlignment="Center" VerticalAlignment="Center" Stretch="Uniform" Source="{StaticResource PlayIcon}"/>
+            </Button>
+            <Button x:Name="StopButton" Grid.Column="4" ToolTip="停止" AutomationProperties.Name="停止" IsEnabled="False"
+                    VerticalAlignment="Center" Margin="0,0,10,0" Click="StopButton_Click">
+                <Image Width="34" Height="34" HorizontalAlignment="Center" VerticalAlignment="Center" Stretch="Uniform" Source="{StaticResource StopIcon}"/>
+            </Button>
+            <Button x:Name="SettingsButton" Grid.Column="5" Style="{StaticResource CircleButtonStyle}"
+                    ToolTip="停顿检测设置" AutomationProperties.Name="停顿检测设置"
+                    HorizontalAlignment="Center" VerticalAlignment="Center" Click="SettingsButton_Click">
+                <Image Width="22" Height="22" HorizontalAlignment="Center" VerticalAlignment="Center" Stretch="Uniform"
+                       Source="{StaticResource SettingsIcon}"/>
+            </Button>
+        </Grid>
+        <Border x:Name="PlaylistBorder" Grid.Row="1" CornerRadius="8" BorderBrush="#DCE2EA" BorderThickness="1"
+                Background="White" SizeChanged="PlaylistBorder_SizeChanged">
+            <DataGrid x:Name="TrackList" AutoGenerateColumns="False" IsReadOnly="True"
+                  CanUserAddRows="False" CanUserDeleteRows="False" CanUserSortColumns="False"
+                  CanUserReorderColumns="False" SelectionMode="Single" SelectionUnit="FullRow"
+                  HeadersVisibility="Column" GridLinesVisibility="Horizontal"
+                  HorizontalGridLinesBrush="#EEF1F5" Background="White" BorderThickness="0"
+                  RowHeight="25" ColumnHeaderHeight="32" AlternationCount="2"
+                  MouseDoubleClick="TrackList_MouseDoubleClick">
+            <DataGrid.ColumnHeaderStyle>
+                <Style TargetType="DataGridColumnHeader" BasedOn="{StaticResource NoFocusVisual}">
+                    <Setter Property="Background" Value="#EAF0F6"/>
+                    <Setter Property="Padding" Value="12,4"/>
+                    <Setter Property="FontWeight" Value="SemiBold"/>
+                    <Setter Property="VerticalContentAlignment" Value="Center"/>
+                </Style>
+            </DataGrid.ColumnHeaderStyle>
+            <DataGrid.Resources>
+                <Style TargetType="DataGridCell" BasedOn="{StaticResource NoFocusVisual}">
+                    <Setter Property="VerticalContentAlignment" Value="Center"/>
+                    <Setter Property="Background" Value="Transparent"/>
+                    <Setter Property="Foreground" Value="#243447"/>
+                    <Setter Property="BorderThickness" Value="0"/>
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="DataGridCell">
+                                <Border Background="{TemplateBinding Background}">
+                                    <ContentPresenter VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                                </Border>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </Style>
+                <Style TargetType="TextBlock">
+                    <Setter Property="VerticalAlignment" Value="Center"/>
+                    <Setter Property="Margin" Value="12,0"/>
+                    <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
+                </Style>
+                <Style TargetType="DataGridRow" BasedOn="{StaticResource NoFocusVisual}">
+                    <EventSetter Event="PreviewKeyDown" Handler="TrackRow_PreviewKeyDown"/>
+                    <Setter Property="ToolTip" Value="{Binding LoadError}"/>
+                    <Setter Property="Background" Value="White"/>
+                    <Style.Triggers>
+                        <Trigger Property="AlternationIndex" Value="1"><Setter Property="Background" Value="#F0F0F0"/></Trigger>
+                        <DataTrigger Binding="{Binding IsActive}" Value="True"><Setter Property="Background" Value="#E0DFC6"/></DataTrigger>
+                        <Trigger Property="IsKeyboardFocusWithin" Value="True"><Setter Property="Background" Value="#F2C867"/></Trigger>
+                    </Style.Triggers>
+                </Style>
+            </DataGrid.Resources>
+            <DataGrid.Columns>
+                <DataGridTemplateColumn Header="播放状态" Width="94">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
+                                <Path x:Name="PlayingMark" Data="M0,0 L9,5 L0,10 Z" Fill="#243447" Visibility="Collapsed"/>
+                                <StackPanel x:Name="PausedMark" Orientation="Horizontal" Visibility="Collapsed">
+                                    <Rectangle Width="3" Height="10" Fill="#243447" Margin="0,0,3,0"/>
+                                    <Rectangle Width="3" Height="10" Fill="#243447"/>
+                                </StackPanel>
+                            </Grid>
+                            <DataTemplate.Triggers>
+                                <DataTrigger Binding="{Binding IsPlaying}" Value="True"><Setter TargetName="PlayingMark" Property="Visibility" Value="Visible"/></DataTrigger>
+                                <DataTrigger Binding="{Binding IsPaused}" Value="True"><Setter TargetName="PausedMark" Property="Visibility" Value="Visible"/></DataTrigger>
+                            </DataTemplate.Triggers>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTextColumn Header="名称" Binding="{Binding Title}" Width="*" MinWidth="200"/>
+                <DataGridTextColumn Header="总时长" Binding="{Binding DurationText}" Width="100"/>
+                <DataGridTextColumn Header="所属专辑" Binding="{Binding Album}" Width="220"/>
+            </DataGrid.Columns>
+            </DataGrid>
+        </Border>
+        <Border x:Name="NotificationBar" Grid.Row="2" Visibility="Collapsed" Padding="12,9" CornerRadius="4" Margin="0,12,0,0">
+            <TextBlock x:Name="NotificationText" TextWrapping="Wrap"/>
+        </Border>
+    </Grid>
+</Window>

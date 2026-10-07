@@ -1,0 +1,88 @@
+<Application x:Class="AudioPausePlayer.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             StartupUri="MainWindow.xaml">
+    <Application.Resources>
+      <ResourceDictionary>
+        <ResourceDictionary.MergedDictionaries>
+            <ResourceDictionary Source="/EnglishAudioPlayer;component/ui/Icons.xaml"/>
+        </ResourceDictionary.MergedDictionaries>
+        <Style x:Key="{x:Static SystemParameters.FocusVisualStyleKey}" TargetType="Control">
+            <Setter Property="Template"><Setter.Value><ControlTemplate TargetType="Control"><Grid/></ControlTemplate></Setter.Value></Setter>
+        </Style>
+        <Style x:Key="NoFocusVisual" TargetType="Control">
+            <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+        </Style>
+        <Style TargetType="Slider" BasedOn="{StaticResource NoFocusVisual}"/>
+        <Style TargetType="TextBox" BasedOn="{StaticResource NoFocusVisual}"/>
+        <Style TargetType="DataGrid" BasedOn="{StaticResource NoFocusVisual}"/>
+        <Style TargetType="DataGridRow" BasedOn="{StaticResource NoFocusVisual}"/>
+        <Style TargetType="DataGridCell" BasedOn="{StaticResource NoFocusVisual}"/>
+        <Style TargetType="DataGridColumnHeader" BasedOn="{StaticResource NoFocusVisual}"/>
+        <Style TargetType="Thumb" BasedOn="{StaticResource NoFocusVisual}"/>
+        <Style TargetType="ScrollBar" BasedOn="{StaticResource NoFocusVisual}"/>
+        <Style TargetType="RepeatButton" BasedOn="{StaticResource NoFocusVisual}"/>
+        <Style TargetType="ToolTip" BasedOn="{StaticResource NoFocusVisual}">
+            <Setter Property="FontFamily" Value="Microsoft YaHei UI"/>
+            <Setter Property="FontSize" Value="12"/>
+        </Style>
+
+        <Style x:Key="CircleButtonStyle" TargetType="Button" BasedOn="{StaticResource NoFocusVisual}">
+            <Setter Property="Width" Value="36"/>
+            <Setter Property="Height" Value="36"/>
+            <Setter Property="Padding" Value="0"/>
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="BorderBrush" Value="#BCC4CD"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="ButtonBorder" CornerRadius="18" Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}"
+                                Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                              VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True"><Setter TargetName="ButtonBorder" Property="BorderBrush" Value="#8998A7"/></Trigger>
+                            <Trigger Property="IsPressed" Value="True"><Setter TargetName="ButtonBorder" Property="BorderBrush" Value="#657487"/></Trigger>
+                            <Trigger Property="IsEnabled" Value="False"><Setter Property="Opacity" Value="0.45"/></Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <Style TargetType="Button" BasedOn="{StaticResource NoFocusVisual}">
+            <Setter Property="Width" Value="36"/>
+            <Setter Property="Height" Value="36"/>
+            <Setter Property="Padding" Value="1"/>
+            <Setter Property="Background" Value="{Binding Background, RelativeSource={RelativeSource AncestorType=Window}}"/>
+            <Setter Property="BorderBrush" Value="#BCC4CD"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="ButtonBorder" CornerRadius="7" Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}"
+                                Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                              VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True"><Setter TargetName="ButtonBorder" Property="BorderBrush" Value="#8998A7"/></Trigger>
+                            <Trigger Property="IsPressed" Value="True"><Setter TargetName="ButtonBorder" Property="BorderBrush" Value="#657487"/></Trigger>
+                            <Trigger Property="IsEnabled" Value="False"><Setter Property="Opacity" Value="0.45"/></Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+      </ResourceDictionary>
+    </Application.Resources>
+</Application>

@@ -1,0 +1,30 @@
+# .NET build output
+**/bin/
+**/obj/
+artifacts/
+TestResults/
+
+# Local SDK / IDE state
+.dotnet/
+.nuget/
+.vs/
+.idea/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Local audio and generated test output
+*.mp3
+docs/test-results/
+
+# Logs and temporary packages
+*.log
+*.pdb
+*.zip
+*.tmp
+
+# OS files
+.DS_Store
+Thumbs.db
+Desktop.ini
